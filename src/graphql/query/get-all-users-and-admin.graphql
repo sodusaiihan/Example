@@ -1,0 +1,18 @@
+query GetAllUserAndAdmin {
+  users {
+    id
+    name
+    email
+    phonenumber
+    address
+    birthday
+    gender
+    createdAt
+    updatedAt
+    roleId
+    role {
+      id
+      name
+    }
+  }
+}

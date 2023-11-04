@@ -1,0 +1,34 @@
+mutation CreateUser(
+  $name: String!
+  $email: String!
+  $phonenumber: Int!
+  $address: String!
+  $birthday: DateTime!
+  $gender: Gender!
+  $roleId: String!
+) {
+  createUser(
+    name: $name
+    email: $email
+    phonenumber: $phonenumber
+    address: $address
+    birthday: $birthday
+    gender: $gender
+    roleId: $roleId
+  ) {
+    id
+    name
+    email
+    phonenumber
+    address
+    birthday
+    gender
+    createdAt
+    updatedAt
+    roleId
+    role {
+      id
+      name
+    }
+  }
+}

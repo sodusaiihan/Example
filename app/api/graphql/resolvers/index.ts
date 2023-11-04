@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,9 @@ const resolvers = {
         include: {
           role: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },  
       });
     },
     user: async (parent: any, args: any) => {
@@ -37,6 +41,40 @@ const resolvers = {
           user: true,
         },
       });
+    },
+    getAllAdmin: async () => {
+      try {
+        const adminUsers = await prisma.user.findMany({
+          where: {
+            role: {
+              name: "Admin",
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        return adminUsers;
+      } catch (error) {
+        throw new NextResponse("Failed to fetch admin users", { status: 500 });
+      }
+    },
+    getAllUser: async (parent: any, args: any) => {
+      try {
+        const users = await prisma.user.findMany({
+          where: {
+            role: {
+              name: "User",
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+        return users;
+      } catch (error) {
+        throw new NextResponse("Failed to fetch users", { status: 500 });
+      }
     },
   },
   Mutation: {

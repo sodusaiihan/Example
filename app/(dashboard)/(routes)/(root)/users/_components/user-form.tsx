@@ -39,8 +39,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-const Gender = z.enum(["MALE", "FEMALE", "OTHER"]);
+import {
+  Gender,
+  useCreateUserMutation,
+  useGetRolesQuery,
+} from "@/src/generated/graphql";
+import { useMemo } from "react";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -48,11 +53,14 @@ const formSchema = z.object({
   phonenumber: z.coerce.number().int().positive(),
   address: z.string().min(5).max(100),
   birthday: z.date(),
-  gender: Gender,
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
   roleId: z.string().uuid(),
 });
 
 function UserForm() {
+  const { data } = useGetRolesQuery();
+  const [createUser, { error, loading }] = useCreateUserMutation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,27 +68,78 @@ function UserForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await createUser({
+        variables: {
+          ...values,
+          gender: Gender.Male,
+        },
+      });
+      toast.success("User created successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
   }
 
-  const { reset, register, handleSubmit, control, formState } = form;
-  const { isValid, isSubmitting } = formState;
+  const {
+    reset,
+    register,
+    handleSubmit,
+    control,
+    formState: { isValid, isSubmitting, errors },
+  } = form;
+
+  const roles = useMemo(() => {
+    return data?.roles || [];
+  }, [data]);
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Бүртгэх</Button>
+        <Button variant="default">Бүртгэх</Button>
       </SheetTrigger>
       <SheetContent className={"overflow-y-scroll max-h-screen scroll"}>
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
+          <SheetTitle className="w-full flex items-center justify-center">
+            Create admin or user
+          </SheetTitle>
           <SheetDescription>
             Make changes to your profile here.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={control}
+              name="roleId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {roles.map((role) => (
+                          <SelectItem key={role.id} value={role.id}>
+                            {role.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage>
+                    {errors.roleId && errors.roleId.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
             <FormField
               control={control}
               name="name"
@@ -95,9 +154,9 @@ function UserForm() {
                     />
                   </FormControl>
                   <FormMessage>
-                    {formState.errors.name && (
+                    {errors.name && (
                       <span className="text-red-600">
-                        {formState.errors.name.message}
+                        {errors.name.message}
                       </span>
                     )}
                   </FormMessage>
@@ -119,9 +178,9 @@ function UserForm() {
                     />
                   </FormControl>
                   <FormMessage>
-                    {formState.errors.name && (
+                    {errors.name && (
                       <span className="text-red-600">
-                        {formState.errors.name.message}
+                        {errors.name.message}
                       </span>
                     )}
                   </FormMessage>
@@ -240,13 +299,15 @@ function UserForm() {
                   <Button
                     type="button"
                     variant={"ghost"}
-                    onClick={() => form.reset()}
+                    onClick={() => reset()}
                   >
                     Cancel
                   </Button>
                 </SheetClose>
               </SheetFooter>
-              <Button type="submit">Submit</Button>
+              <Button disabled={!isValid || isSubmitting} type="submit">
+                Submit
+              </Button>
             </div>
           </form>
         </Form>

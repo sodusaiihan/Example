@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { makeExecutableSchema } from "graphql-tools";
 
 const typeDefs = gql`
   type User {
@@ -35,6 +36,8 @@ const typeDefs = gql`
     user(id: String!): User
     roles: [Role!]!
     role(id: String!): Role
+    getAllAdmin: [User!]!
+    getAllUser: [User!]!
   }
 
   type Mutation {
@@ -64,4 +67,8 @@ const typeDefs = gql`
   }
 `;
 
-export default typeDefs;
+const schema = makeExecutableSchema({
+  typeDefs,
+});
+
+export default schema;

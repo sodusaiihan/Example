@@ -1,0 +1,12 @@
+query GetAllAdmin {
+  getAllAdmin {
+    id
+    name
+    email
+    phonenumber
+    address
+    birthday
+    gender
+    createdAt
+  }
+}
