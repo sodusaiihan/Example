@@ -6,9 +6,7 @@ export default async function UserPage() {
       <div className="flex items-center justify-between space-y-2">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Нийт хэрэглэгч</h2>
-          <p className="text-muted-foreground">
-            Here&apos;s a list of your tasks for this month!
-          </p>
+          <p className="text-muted-foreground">Хэрэглэгчдийн жагсаалт</p>
         </div>
       </div>
       <UserTable />

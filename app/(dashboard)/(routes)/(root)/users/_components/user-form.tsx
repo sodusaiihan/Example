@@ -97,9 +97,6 @@ function UserForm() {
           <SheetTitle className="w-full flex items-center justify-center">
             Админ эсвэл хэрэглэгч үүсгэх
           </SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here.
-          </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

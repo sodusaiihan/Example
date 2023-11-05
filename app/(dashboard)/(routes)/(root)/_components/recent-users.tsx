@@ -17,7 +17,7 @@ export function RecentUsers() {
         {users.map((user) => (
           <div key={user.id} className="flex">
             <Avatar className="h-9 w-9">
-              <AvatarImage src="/avatar/avatar1 .svg" alt="Avatar" />
+              <AvatarImage src="/avatar/avatar1.svg" alt="Avatar" />
               <AvatarFallback>{user.name[0]}</AvatarFallback>
             </Avatar>
             <div className="ml-4 space-y-1">

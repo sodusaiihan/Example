@@ -97,7 +97,6 @@ export function UserEditPage({ userId }: UserEditPageProps) {
   }, [user, reset]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     try {
       updateUser({
         variables: {
@@ -137,8 +136,8 @@ export function UserEditPage({ userId }: UserEditPageProps) {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Card>
               <CardHeader>
-                <CardTitle>Edit user</CardTitle>
-                <CardDescription>In here you can edit user</CardDescription>
+                <CardTitle>Засварлах</CardTitle>
+                <CardDescription>Хэрэглэгч засварлах</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-6">
                 <FormField
@@ -157,8 +156,8 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="user">User</SelectItem>
+                            <SelectItem value="admin">Админ</SelectItem>
+                            <SelectItem value="user">Хэрэглэгч</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -172,11 +171,11 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>Нэр</FormLabel>
                         <FormControl className="relative">
                           <Input
                             autoComplete="off"
-                            placeholder="name"
+                            placeholder="Та нэрээ оруулна уу"
                             {...field}
                             className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                           />
@@ -196,13 +195,13 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Цахим шуудан</FormLabel>
                         <FormControl>
                           <Input
                             type="email"
                             {...field}
                             autoComplete="off"
-                            placeholder="email 📧"
+                            placeholder="Та цахим шуудангаа оруулна уу 📧"
                             className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                           />
                         </FormControl>
@@ -223,12 +222,12 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                     name="phonenumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
+                        <FormLabel>Утасны дугаар</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             autoComplete="off"
-                            placeholder="phonenumber 📱"
+                            placeholder="Та утасны дугаараа оруулна уу 📱"
                             className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                           />
                         </FormControl>
@@ -241,12 +240,12 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                     name="address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Address</FormLabel>
+                        <FormLabel>Хаяг</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             autoComplete="off"
-                            placeholder="address 🏡"
+                            placeholder="Та хаягаа оруулна уу 🏡"
                             className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                           />
                         </FormControl>
@@ -268,12 +267,12 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                           {...field}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select gender" />
+                            <SelectValue placeholder="Хүйс" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="MALE">Male</SelectItem>
-                            <SelectItem value="FEMALE">Female</SelectItem>
-                            <SelectItem value="OTHER">Other</SelectItem>
+                            <SelectItem value="MALE">Эрэгтэй</SelectItem>
+                            <SelectItem value="FEMALE">Эмэгтэй</SelectItem>
+                            <SelectItem value="OTHER">Бусад</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -286,7 +285,7 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                   name="birthday"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Date of birth</FormLabel>
+                      <FormLabel>Төрсөн огноо</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -300,7 +299,7 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                               {field.value ? (
                                 format(field.value, "PPP")
                               ) : (
-                                <span>Pick a date</span>
+                                <span>Өдөр сонгох</span>
                               )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
@@ -324,7 +323,7 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                 />
               </CardContent>
               <CardFooter>
-                <Button className="w-full">Continue</Button>
+                <Button className="w-full">Хадгалах</Button>
               </CardFooter>
             </Card>
           </form>
