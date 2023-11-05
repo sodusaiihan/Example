@@ -1,7 +1,7 @@
 "use client";
 
-import { useGetOverViewQuery } from "@/src/generated/graphql";
 import { useMemo } from "react";
+import { useGetOverViewQuery } from "@/src/generated/graphql";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export function Overview() {
