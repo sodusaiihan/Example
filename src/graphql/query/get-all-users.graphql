@@ -1,6 +1,7 @@
-query GetAllUsers {
+query GetAllUser {
   getAllUser {
     id
+    role
     name
     email
     phonenumber
@@ -8,5 +9,6 @@ query GetAllUsers {
     birthday
     gender
     createdAt
+    updatedAt
   }
 }

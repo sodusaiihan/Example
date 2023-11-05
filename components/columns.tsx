@@ -1,11 +1,13 @@
 "use client";
 
+import { format, parseISO } from "date-fns";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "./ui/checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
-
-// import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableRowActions } from "./data-table-row-actions";
 import { User } from "@prisma/client";
+
+const formattedDate = (date: string) => format(parseISO(date), "yyyy-MM-dd");
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -98,7 +100,7 @@ export const columns: ColumnDef<User>[] = [
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("birthday")}
+            {formattedDate(row.getValue("birthday"))}
           </span>
         </div>
       );
@@ -117,6 +119,13 @@ export const columns: ColumnDef<User>[] = [
           </span>
         </div>
       );
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const users = row.original
+      return <DataTableRowActions row={users} />;
     },
   },
 ];

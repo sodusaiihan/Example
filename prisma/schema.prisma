@@ -12,29 +12,13 @@ datasource db {
 
 model User {
   id String @id @default(uuid())
+  role String
   name String
   email String
-  phonenumber Int
+  phonenumber String
   address String
   birthday DateTime
-  gender Gender
+  gender String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  roleId String
-  role Role @relation(references: [id], fields: [roleId], onDelete: Cascade)
-
-  @@index([roleId])
-}
-
-model Role {
-  id String @id @default(uuid())
-  name String
-  user User[]
-}
-
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
 }

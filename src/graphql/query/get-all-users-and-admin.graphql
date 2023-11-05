@@ -1,6 +1,7 @@
 query GetAllUserAndAdmin {
-  users {
+ users {
     id
+    role
     name
     email
     phonenumber
@@ -9,10 +10,5 @@ query GetAllUserAndAdmin {
     gender
     createdAt
     updatedAt
-    roleId
-    role {
-      id
-      name
-    }
   }
 }

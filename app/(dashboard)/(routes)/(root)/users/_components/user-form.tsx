@@ -39,27 +39,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Gender,
-  useCreateUserMutation,
-  useGetRolesQuery,
-} from "@/src/generated/graphql";
-import { useMemo } from "react";
+import { useCreateUserMutation } from "@/src/generated/graphql";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
+  role: z.string(),
   name: z.string().min(2).max(50),
   email: z.string().email(),
-  phonenumber: z.coerce.number().int().positive(),
+  phonenumber: z.string().min(8).max(13),
   address: z.string().min(5).max(100),
   birthday: z.date(),
-  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-  roleId: z.string().uuid(),
+  gender: z.string(),
 });
 
 function UserForm() {
-  const { data } = useGetRolesQuery();
   const [createUser, { error, loading }] = useCreateUserMutation();
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,32 +65,27 @@ function UserForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await createUser({
         variables: {
           ...values,
-          gender: Gender.Male,
         },
       });
       toast.success("User created successfully");
+      router.refresh();
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
+      console.log("CREATE_USER", error);
     }
-  }
+  };
 
   const {
     reset,
-    register,
     handleSubmit,
     control,
     formState: { isValid, isSubmitting, errors },
   } = form;
-
-  const roles = useMemo(() => {
-    return data?.roles || [];
-  }, [data]);
 
   return (
     <Sheet>
@@ -113,7 +105,7 @@ function UserForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={control}
-              name="roleId"
+              name="role"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
@@ -126,17 +118,12 @@ function UserForm() {
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                       <SelectContent>
-                        {roles.map((role) => (
-                          <SelectItem key={role.id} value={role.id}>
-                            {role.name}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="user">User</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormMessage>
-                    {errors.roleId && errors.roleId.message}
-                  </FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -148,7 +135,8 @@ function UserForm() {
                   <FormLabel>Name</FormLabel>
                   <FormControl className="relative">
                     <Input
-                      placeholder="name"
+                      autoComplete="off"
+                      placeholder="name 🤗"
                       {...field}
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
@@ -173,6 +161,7 @@ function UserForm() {
                     <Input
                       type="email"
                       {...field}
+                      autoComplete="off"
                       placeholder="email 📧"
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
@@ -195,15 +184,10 @@ function UserForm() {
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
-                      placeholder="phonenumber 📱"
                       {...field}
+                      placeholder="phonenumber 📱"
+                      autoComplete="off"
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
-                      pattern="[0-9]*"
-                      {...register("phonenumber", {
-                        required: true,
-                        valueAsNumber: true,
-                      })}
                     />
                   </FormControl>
                   <FormMessage />
@@ -218,8 +202,9 @@ function UserForm() {
                   <FormLabel>Address</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="address 🏡"
                       {...field}
+                      autoComplete="off"
+                      placeholder="address 🏡"
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
                   </FormControl>

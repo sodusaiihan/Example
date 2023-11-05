@@ -4,66 +4,47 @@ import { makeExecutableSchema } from "graphql-tools";
 const typeDefs = gql`
   type User {
     id: String!
+    role: String!
     name: String!
     email: String!
-    phonenumber: Int!
+    phonenumber: String!
     address: String!
     birthday: DateTime!
-    gender: Gender!
+    gender: String!
     createdAt: DateTime!
     updatedAt: DateTime!
-
-    roleId: String!
-    role: Role!
-  }
-
-  type Role {
-    id: String!
-    name: String!
-    user: [User!]!
-  }
-
-  enum Gender {
-    MALE
-    FEMALE
-    OTHER
   }
 
   scalar DateTime
 
   type Query {
     users: [User!]!
-    user(id: String!): User
-    roles: [Role!]!
-    role(id: String!): Role
+    user(id: String!): User!
     getAllAdmin: [User!]!
     getAllUser: [User!]!
   }
 
   type Mutation {
     createUser(
+      role: String!
       name: String!
       email: String!
-      phonenumber: Int!
+      phonenumber: String!
       address: String!
       birthday: DateTime!
-      gender: Gender!
-      roleId: String!
+      gender: String!
     ): User!
     updateUser(
       id: String!
+      role: String
       name: String
       email: String
-      phonenumber: Int
+      phonenumber: String
       address: String
       birthday: DateTime
-      gender: Gender
-      roleId: String
+      gender: String
     ): User!
-    deleteUser(id: String!): User!
-    createRole(name: String!): Role!
-    updateRole(id: String!, name: String): Role!
-    deleteRole(id: String!): Role!
+    deleteUser(id: String!): Boolean!
   }
 `;
 

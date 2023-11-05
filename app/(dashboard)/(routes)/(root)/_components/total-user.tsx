@@ -2,10 +2,10 @@
 
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetAllUsersQuery } from "@/src/generated/graphql";
+import { useGetAllUserQuery } from "@/src/generated/graphql";
 
 const TotalUser = () => {
-  const { data } = useGetAllUsersQuery();
+  const { data } = useGetAllUserQuery();
 
   const users = useMemo(() => {
     return data?.getAllUser || [];

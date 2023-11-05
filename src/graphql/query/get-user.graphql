@@ -1,5 +1,5 @@
-query GetAllAdmin {
-  getAllAdmin {
+query GetUserById($userId: String!) {
+  user(id: $userId) {
     id
     role
     name

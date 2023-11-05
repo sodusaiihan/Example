@@ -1,22 +1,23 @@
 mutation CreateUser(
+  $role: String!
   $name: String!
   $email: String!
-  $phonenumber: Int!
+  $phonenumber: String!
   $address: String!
   $birthday: DateTime!
-  $gender: Gender!
-  $roleId: String!
+  $gender: String!
 ) {
   createUser(
+    role: $role
     name: $name
     email: $email
     phonenumber: $phonenumber
     address: $address
     birthday: $birthday
     gender: $gender
-    roleId: $roleId
   ) {
     id
+    role
     name
     email
     phonenumber
@@ -25,10 +26,5 @@ mutation CreateUser(
     gender
     createdAt
     updatedAt
-    roleId
-    role {
-      id
-      name
-    }
   }
 }
