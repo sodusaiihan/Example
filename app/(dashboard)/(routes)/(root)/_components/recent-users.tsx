@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useGetRecentUsersQuery } from "@/src/generated/graphql";
+import Image from "next/image";
 import { useMemo } from "react";
 
 export function RecentUsers() {
@@ -11,7 +12,7 @@ export function RecentUsers() {
   const users = useMemo(() => {
     return data?.getRecentUsers || [];
   }, [data]);
-  return (
+  return users.length > 0 ? (
     <div className="space-y-8">
       <div className="flex flex-col space-y-8">
         {users.map((user) => (
@@ -30,6 +31,16 @@ export function RecentUsers() {
           </div>
         ))}
       </div>
+    </div>
+  ) : (
+    <div className="flex items-center justify-center">
+      <Image
+        src="/not-found/corrupted-file.png"
+        alt="no-data"
+        objectFit="contain"
+        width={150}
+        height={200}
+      />
     </div>
   );
 }
