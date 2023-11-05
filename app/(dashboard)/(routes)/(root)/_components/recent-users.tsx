@@ -1,13 +1,15 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useGetAllUserAndAdminQuery } from "@/src/generated/graphql";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { useGetRecentUsersQuery } from "@/src/generated/graphql";
 import { useMemo } from "react";
 
-export function RecentSales() {
-  const { data } = useGetAllUserAndAdminQuery();
+export function RecentUsers() {
+  const { data } = useGetRecentUsersQuery();
   const users = useMemo(() => {
-    return data?.users || [];
+    return data?.getRecentUsers || [];
   }, [data]);
   return (
     <div className="space-y-8">
@@ -15,14 +17,16 @@ export function RecentSales() {
         {users.map((user) => (
           <div key={user.id} className="flex">
             <Avatar className="h-9 w-9">
-              <AvatarImage src="/avatars/05.png" alt="Avatar" />
+              <AvatarImage src="/avatar/avatar1 .svg" alt="Avatar" />
               <AvatarFallback>{user.name[0]}</AvatarFallback>
             </Avatar>
             <div className="ml-4 space-y-1">
               <p className="text-sm font-medium leading-none">{user.name}</p>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
-            <div className="ml-auto font-medium">{user.gender}</div>
+            <Badge className={cn("ml-auto font-medium")}>
+              {user.role === "user" ? "Хэрэглэгч" : "Админ"}
+            </Badge>
           </div>
         ))}
       </div>

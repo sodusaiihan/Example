@@ -1,0 +1,6 @@
+query GetOverView {
+  getOverView {
+    role
+    total
+  }
+}

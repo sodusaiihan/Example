@@ -95,7 +95,7 @@ function UserForm() {
       <SheetContent className={"overflow-y-scroll max-h-screen scroll"}>
         <SheetHeader>
           <SheetTitle className="w-full flex items-center justify-center">
-            Create admin or user
+            Админ эсвэл хэрэглэгч үүсгэх
           </SheetTitle>
           <SheetDescription>
             Make changes to your profile here.
@@ -108,7 +108,7 @@ function UserForm() {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>Роль</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -118,8 +118,8 @@ function UserForm() {
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="admin">Admin</SelectItem>
-                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Админ</SelectItem>
+                        <SelectItem value="user">Хэрэглэгч</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -132,11 +132,11 @@ function UserForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Нэр</FormLabel>
                   <FormControl className="relative">
                     <Input
                       autoComplete="off"
-                      placeholder="name 🤗"
+                      placeholder="Та нэрээ оруулна уу 🤗"
                       {...field}
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
@@ -156,13 +156,13 @@ function UserForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Цахим шуудан</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
                       {...field}
                       autoComplete="off"
-                      placeholder="email 📧"
+                      placeholder="Та цахим шуудангаа оруулна уу 📧"
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
                   </FormControl>
@@ -181,11 +181,11 @@ function UserForm() {
               name="phonenumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Утасны дугаар</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="phonenumber 📱"
+                      placeholder="Та утасны дугаараа оруулна уу 📱"
                       autoComplete="off"
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
@@ -199,12 +199,12 @@ function UserForm() {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Хаяг</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       autoComplete="off"
-                      placeholder="address 🏡"
+                      placeholder="Та хаягаа оруулна уу 🏡"
                       className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
                     />
                   </FormControl>
@@ -217,19 +217,19 @@ function UserForm() {
               name="gender"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Gender</FormLabel>
+                  <FormLabel>Хүйс</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select gender" />
+                        <SelectValue placeholder="Та хүйсээ сонгоно уу" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="MALE">Male</SelectItem>
-                        <SelectItem value="FEMALE">Female</SelectItem>
-                        <SelectItem value="OTHER">Other</SelectItem>
+                        <SelectItem value="MALE">Эрэгтэй</SelectItem>
+                        <SelectItem value="FEMALE">Эмэгтэй</SelectItem>
+                        <SelectItem value="OTHER">Бусад</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -242,7 +242,7 @@ function UserForm() {
               name="birthday"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date of birth</FormLabel>
+                  <FormLabel>Төрсөн огноо</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -256,7 +256,7 @@ function UserForm() {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span>Pick a date</span>
+                            <span>Огноо сонгох</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -286,12 +286,12 @@ function UserForm() {
                     variant={"ghost"}
                     onClick={() => reset()}
                   >
-                    Cancel
+                    Цуцлах
                   </Button>
                 </SheetClose>
               </SheetFooter>
               <Button disabled={!isValid || isSubmitting} type="submit">
-                Submit
+                Үүсгэх
               </Button>
             </div>
           </form>

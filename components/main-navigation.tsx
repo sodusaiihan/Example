@@ -15,13 +15,13 @@ export function MainNavigation({
         href="/"
         className="text-sm font-medium transition-colors hover:text-primary"
       >
-        Overview
+        Самбар
       </Link>
       <Link
         href="/users"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Users
+        Хэрэглэгчид
       </Link>
     </nav>
   );

@@ -15,6 +15,11 @@ const typeDefs = gql`
     updatedAt: DateTime!
   }
 
+  type OverView {
+    role: String!
+    total: Int!
+  }
+
   scalar DateTime
 
   type Query {
@@ -22,6 +27,8 @@ const typeDefs = gql`
     user(id: String!): User!
     getAllAdmin: [User!]!
     getAllUser: [User!]!
+    getRecentUsers: [User!]!
+    getOverView: [OverView!]!
   }
 
   type Mutation {
@@ -36,13 +43,13 @@ const typeDefs = gql`
     ): User!
     updateUser(
       id: String!
-      role: String
-      name: String
-      email: String
-      phonenumber: String
-      address: String
-      birthday: DateTime
-      gender: String
+      role: String!
+      name: String!
+      email: String!
+      phonenumber: String!
+      address: String!
+      birthday: DateTime!
+      gender: String!
     ): User!
     deleteUser(id: String!): Boolean!
   }

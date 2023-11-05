@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -20,7 +18,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGetUserByIdQuery } from "@/src/generated/graphql";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+} from "@/src/generated/graphql";
 import Image from "next/image";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -42,6 +43,8 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface UserEditPageProps {
   userId: string;
@@ -58,10 +61,14 @@ const formSchema = z.object({
 });
 
 export function UserEditPage({ userId }: UserEditPageProps) {
+  const router = useRouter();
+
   const { data } = useGetUserByIdQuery({
     variables: { userId },
     skip: !userId,
   });
+
+  const [updateUser] = useUpdateUserMutation();
 
   const user = useMemo(() => {
     return data?.user || undefined;
@@ -69,26 +76,41 @@ export function UserEditPage({ userId }: UserEditPageProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = form;
+
+  useEffect(() => {
+    reset({
+      role: user?.role,
       name: user?.name,
       email: user?.email,
       phonenumber: user?.phonenumber,
       address: user?.address,
       gender: user?.gender,
-      birthday: user?.birthday,
-    },
-  });
-
-  const {
-    reset,
-    register,
-    handleSubmit,
-    control,
-    formState: { isValid, isSubmitting, errors },
-  } = form;
+    });
+  }, [user, reset]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    try {
+      updateUser({
+        variables: {
+          updateUserId: userId,
+          ...values,
+        },
+      });
+      toast.success("User updated successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log("UPDATE_USER_ID", error);
+    }
   };
 
   return (
@@ -115,10 +137,8 @@ export function UserEditPage({ userId }: UserEditPageProps) {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Card>
               <CardHeader>
-                <CardTitle>Payment Method</CardTitle>
-                <CardDescription>
-                  Add a new payment method to your account.
-                </CardDescription>
+                <CardTitle>Edit user</CardTitle>
+                <CardDescription>In here you can edit user</CardDescription>
               </CardHeader>
               <CardContent className="grid gap-6">
                 <FormField
@@ -128,42 +148,25 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                     <FormItem>
                       <FormLabel>Role</FormLabel>
                       <FormControl>
-                        <RadioGroup
-                          defaultValue="user"
-                          className="grid grid-cols-2 gap-4"
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
                           {...field}
                         >
-                          <div>
-                            <RadioGroupItem
-                              value="admin"
-                              className="peer sr-only"
-                            />
-                            <Label
-                              htmlFor="card"
-                              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                            >
-                              Admin
-                            </Label>
-                          </div>
-                          <div>
-                            <RadioGroupItem
-                              value="user"
-                              className="peer sr-only"
-                            />
-                            <Label
-                              htmlFor="card"
-                              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                            >
-                              User
-                            </Label>
-                          </div>
-                        </RadioGroup>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="user">User</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={control}
                     name="name"
@@ -214,7 +217,7 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                     )}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-4 w-full">
                   <FormField
                     control={control}
                     name="phonenumber"
@@ -223,16 +226,10 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                         <FormLabel>Phone Number</FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
-                            placeholder="phonenumber 📱"
                             {...field}
                             autoComplete="off"
+                            placeholder="phonenumber 📱"
                             className="focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0"
-                            pattern="[0-9]*"
-                            {...register("phonenumber", {
-                              required: true,
-                              valueAsNumber: true,
-                            })}
                           />
                         </FormControl>
                         <FormMessage />
@@ -257,79 +254,74 @@ export function UserEditPage({ userId }: UserEditPageProps) {
                       </FormItem>
                     )}
                   />
-                  <div className="grid grid-cols-2 gap-2">
-                    <FormField
-                      control={control}
-                      name="gender"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Gender</FormLabel>
-                          <FormControl>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select gender" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="MALE">Male</SelectItem>
-                                <SelectItem value="FEMALE">Female</SelectItem>
-                                <SelectItem value="OTHER">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="birthday"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Date of birth</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "PPP")
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() ||
-                                  date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
                 </div>
+                <FormField
+                  control={control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem className="grid-flow-row">
+                      <FormLabel>Gender</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          {...field}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="MALE">Male</SelectItem>
+                            <SelectItem value="FEMALE">Female</SelectItem>
+                            <SelectItem value="OTHER">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="birthday"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date of birth</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "focus:outline-none transition duration-300 ease-in-out transform hover:-translate-y-0.5 active:translate-y-0",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
               <CardFooter>
                 <Button className="w-full">Continue</Button>

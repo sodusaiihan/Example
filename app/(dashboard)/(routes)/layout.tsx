@@ -1,7 +1,7 @@
 import React from "react";
 import { MainNavigation } from "@/components/main-navigation";
 import UserForm from "./(root)/users/_components/user-form";
-import { UserNavigation } from "@/components/user-navigation";
+import { UserNavigation } from "./(root)/users/_components/user-navigation";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (

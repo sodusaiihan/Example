@@ -34,7 +34,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Нэр" />
     ),
     cell: ({ row }) => {
       return (
@@ -49,7 +49,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Email" />
+      <DataTableColumnHeader column={column} title="Цахим шуудан" />
     ),
     cell: ({ row }) => {
       return (
@@ -64,7 +64,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "phonenumber",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phone Number" />
+      <DataTableColumnHeader column={column} title="Утасны дугаар" />
     ),
     cell: ({ row }) => {
       return (
@@ -79,7 +79,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "address",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Address" />
+      <DataTableColumnHeader column={column} title="Хаяг" />
     ),
     cell: ({ row }) => {
       return (
@@ -94,7 +94,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "birthday",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Birthday" />
+      <DataTableColumnHeader column={column} title="Төрсөн огноо" />
     ),
     cell: ({ row }) => {
       return (
@@ -109,7 +109,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "gender",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gender" />
+      <DataTableColumnHeader column={column} title="Хүйс" />
     ),
     cell: ({ row }) => {
       return (
@@ -122,9 +122,24 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
+    accessorKey: "role",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Роль" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("role")}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
-      const users = row.original
+      const users = row.original;
       return <DataTableRowActions row={users} />;
     },
   },
