@@ -164,9 +164,9 @@ function UserForm() {
                     />
                   </FormControl>
                   <FormMessage>
-                    {errors.name && (
+                    {errors.email && (
                       <span className="text-red-600">
-                        {errors.name.message}
+                        {errors.email.message}
                       </span>
                     )}
                   </FormMessage>

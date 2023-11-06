@@ -4,9 +4,10 @@ import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetAllUserQuery } from "@/src/generated/graphql";
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TotalUser = () => {
-  const { data } = useGetAllUserQuery();
+  const { data, loading } = useGetAllUserQuery();
 
   const users = useMemo(() => {
     return data?.getAllUser || [];
@@ -19,17 +20,19 @@ const TotalUser = () => {
           <CardTitle className="text-sm font-medium">Хэрэглэгч</CardTitle>
         </CardHeader>
         <CardContent>
-          {users.length > 0 ? (
-            <div className="text-2xl font-bold">{users.length || 0}</div>
-          ) : (
+          {loading && <Skeleton className="w-full h-8 rounded-full" />}
+          {users.length > 0 && !loading && (
+            <div className="text-2xl font-bold">{users.length}</div>
+          )}
+          {users.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center">
               <div>
                 <Image
                   src="/not-found/recycle-bin.png"
                   alt="no-data"
                   objectFit="contain"
-                  width={32}
-                  height={32}
+                  width={50}
+                  height={50}
                 />
               </div>
             </div>

@@ -6,6 +6,7 @@ import { RecentUsers } from "./_components/recent-users";
 import TotalAdmin from "./_components/total-admin";
 import Total from "./_components/total";
 import TotalUser from "./_components/total-user";
+import ExcelExport from "@/export/excel-export";
 
 const DashboardPage = () => {
   return (
@@ -14,7 +15,11 @@ const DashboardPage = () => {
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Самбар</h2>
+            <div className="flex items-center space-x-2">
+              <ExcelExport />
+            </div>
           </div>
+
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
               <TabsTrigger value="overview">Хураангуй</TabsTrigger>

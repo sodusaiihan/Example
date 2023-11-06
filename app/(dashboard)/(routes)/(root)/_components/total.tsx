@@ -1,12 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetAllUserAndAdminQuery } from "@/src/generated/graphql";
-import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Total = () => {
-  const { data } = useGetAllUserAndAdminQuery();
+  const { data, loading } = useGetAllUserAndAdminQuery();
   const users = useMemo(() => {
     return data?.users || [];
   }, [data]);
@@ -18,9 +19,11 @@ const Total = () => {
           <CardTitle className="text-sm font-medium">Нийт </CardTitle> 
         </CardHeader>
         <CardContent>
-          {users.length > 0 ? (
-            <div className="text-2xl font-bold">{users.length || 0}</div>
-          ) : (
+        {loading && <Skeleton className="w-full h-8 rounded-full" />}
+          {users.length > 0 && !loading && (
+            <div className="text-2xl font-bold">{users.length}</div>
+          )}
+          {users.length === 0 && !loading && (
             <div className="flex flex-col items-center justify-center">
               <div>
                 <Image
